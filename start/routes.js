@@ -19,7 +19,11 @@ const Route = use('Route')
 Route.post('/user', 'UserController.store').validator('User')
 Route.post('/session', 'SessionController.store').validator('Session')
 Route.group(() => {
-  Route.patch('/user/:user_id', 'UserController.update')
-    .validator('UserEdit')
-    .middleware('sameUserOnly')
-}).middleware('auth')
+  Route.patch('/user/:user_id', 'UserController.update').validator('UserEdit')
+  Route.resource('user.event', 'EventController').validator(
+    new Map([
+      [['user.event.store', 'user.event.update'], ['Event']],
+      [['user.event.index'], ['EventQuery']]
+    ])
+  )
+}).middleware('auth', 'sameUserOnly')

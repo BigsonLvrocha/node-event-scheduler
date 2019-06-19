@@ -22,16 +22,29 @@ class ExceptionHandler extends BaseExceptionHandler {
    *
    * @return {void}
    */
-  async handle (error, { request, response }) {
-    if (error.name === 'ValidationException') {
-      return response.status(error.status).send(error.messages)
+  async handle (error, { request, response, ...restArgs }) {
+    switch (error.name) {
+      case 'ValidationException':
+        return response.status(error.status).send(error.messages)
+      case 'ModelNotFoundException':
+        return response.status(error.status).send({
+          error: {
+            message:
+              "Looks like you are trying to do something to a thing that doesn't exists"
+          }
+        })
+      case 'SaveException':
+        return super.handle(error, { request, response, ...restArgs })
+      case 'ForbiddenException':
+        return super.handle(error, { request, response, ...restArgs })
+      default:
+        if (Env.get('NODE_ENV') === 'development') {
+          const youch = new Youch(error, request.request)
+          const errorJSON = await youch.toJSON()
+          return response.status(error.status).send(errorJSON)
+        }
+        return response.status(error.status)
     }
-    if (Env.get('NODE_ENV') === 'development') {
-      const youch = new Youch(error, request.request)
-      const errorJSON = await youch.toJSON()
-      return response.status(error.status).send(errorJSON)
-    }
-    return response.status(error.status)
   }
 
   /**
@@ -44,9 +57,7 @@ class ExceptionHandler extends BaseExceptionHandler {
    *
    * @return {void}
    */
-  async report (error, { request }) {
-    console.error(error)
-  }
+  async report (error, { request }) {}
 }
 
 module.exports = ExceptionHandler
