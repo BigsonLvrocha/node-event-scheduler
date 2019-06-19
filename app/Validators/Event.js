@@ -1,5 +1,7 @@
 'use strict'
 
+const Antl = use('Antl')
+
 class Event {
   get validateAll () {
     return true
@@ -11,6 +13,10 @@ class Event {
       time: `date|required`,
       location: 'string|required'
     }
+  }
+
+  get messages () {
+    return Antl.list('validation')
   }
 }
 
