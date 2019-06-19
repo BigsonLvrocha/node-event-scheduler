@@ -16,4 +16,10 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.post('/users', 'UserController.store').validator('User')
+Route.post('/user', 'UserController.store').validator('User')
+Route.post('/session', 'SessionController.store').validator('Session')
+Route.group(() => {
+  Route.patch('/user/:user_id', 'UserController.update')
+    .validator('UserEdit')
+    .middleware('sameUserOnly')
+}).middleware('auth')
