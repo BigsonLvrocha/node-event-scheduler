@@ -17,7 +17,10 @@ const providers = [
   '@adonisjs/cors/providers/CorsProvider',
   '@adonisjs/lucid/providers/LucidProvider',
   '@adonisjs/mail/providers/MailProvider',
-  '@adonisjs/validator/providers/ValidatorProvider'
+  '@adonisjs/validator/providers/ValidatorProvider',
+  'adonis-kue/providers/KueProvider',
+  '@adonisjs/framework/providers/ViewProvider',
+  '@adonisjs/redis/providers/RedisProvider'
 ]
 
 /*
@@ -29,7 +32,10 @@ const providers = [
 | Providers for migrations, tests etc.
 |
 */
-const aceProviders = ['@adonisjs/lucid/providers/MigrationsProvider']
+const aceProviders = [
+  '@adonisjs/lucid/providers/MigrationsProvider',
+  'adonis-kue/providers/CommandsProvider'
+]
 
 /*
 |--------------------------------------------------------------------------
@@ -55,4 +61,14 @@ const aliases = {}
 */
 const commands = []
 
-module.exports = { providers, aceProviders, aliases, commands }
+/*
+|--------------------------------------------------------------------------
+| Jobs
+|--------------------------------------------------------------------------
+|
+| Here you store available jobs
+|
+*/
+const jobs = ['App/Jobs/EventShare']
+
+module.exports = { providers, aceProviders, aliases, commands, jobs }

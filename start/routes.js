@@ -26,4 +26,8 @@ Route.group(() => {
       [['user.event.index'], ['EventQuery']]
     ])
   )
+  Route.post(
+    '/user/:user_id/event/:id/share',
+    'EventShareController.store'
+  ).validator('EventShare')
 }).middleware('auth', 'sameUserOnly')
